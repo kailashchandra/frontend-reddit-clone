@@ -21,10 +21,17 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "_redirects",
+                "input": "src",
+                "output": "/"
+              }
             ],
             "styles": [
-              "src/styles.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
@@ -119,6 +126,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "frontend-reddit-clone"
+    }
+  },
+  "defaultProject": "frontend-reddit-clone",
+  "cli": {
+    "analytics": false
+  }
 }
