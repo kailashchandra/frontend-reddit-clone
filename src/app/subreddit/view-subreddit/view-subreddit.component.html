@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+      <hr />
+      <div class="col-md-9" *ngIf="subreddit">
+        <label>Subreddit Name : </label><span class="subreddit-text">{{subreddit.name}}</span>
+        <hr />
+        <label>Description : </label><span class="subreddit-text">{{subreddit.description}}</span>
+        <hr />
+        <label>Number of Post : </label><span class="subreddit-text">{{subreddit.numberOfPost}}</span>
+        <hr />
+      </div>
+      <div class="col-md-3">
+        <app-side-bar></app-side-bar>
+        <app-subreddit-side-bar></app-subreddit-side-bar>
+      </div>
+    </div>
+  </div>

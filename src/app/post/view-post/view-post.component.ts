@@ -6,6 +6,7 @@ import { throwError } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CommentPayload } from 'src/app/comment/comment-payload';
 import { CommentService } from 'src/app/comment/comment.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-view-post',
@@ -22,7 +23,8 @@ export class ViewPostComponent implements OnInit {
 
   constructor(private postService: PostService,
     private activateRoute: ActivatedRoute,
-    private commentService: CommentService) {
+    private commentService: CommentService,
+    private toastr: ToastrService) {
       this.postId = activateRoute.snapshot.params.id;
 
       this.commentForm = new FormGroup({
@@ -65,6 +67,7 @@ export class ViewPostComponent implements OnInit {
       this.commentForm.get('text').setValue('');
       this.getCommentsForPost();
     }, error => {
+      this.toastr.error(error.error.message);
       throwError(error);
     })
   }

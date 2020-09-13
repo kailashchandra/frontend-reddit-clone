@@ -9,7 +9,8 @@ import { CommentPayload } from './comment-payload';
 })
 export class CommentService {
 
-  URL: string = 'http://localhost:8080/api/comments/';
+  //URL: string = 'http://localhost:8080/api/comments/';
+  URL: string = 'https://kdcoder-reddit-clone.herokuapp.com/api/comments/';
 
   constructor(private httpClient: HttpClient) { }
 

@@ -17,6 +17,7 @@ export class ListSubredditsComponent implements OnInit {
     this.subredditService.getAllSubreddits().subscribe(data => {
       this.subreddits = data;
     }, error => {
+      console.log('Error while getting subreddit !!');
       throwError(error);
     })
   }

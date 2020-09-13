@@ -49,19 +49,28 @@ export class VoteButtonComponent implements OnInit {
   }
 
   private vote() {
-    this.votePayload.postId = this.post.id;
-    this.voteService.vote(this.votePayload).subscribe(() => {
-      this.updateVoteDetails();
-    }, error => {
-      this.toastr.error(error.error.message);
-      throwError(error);
-    });
+    if (this.post) {
+      this.votePayload.postId = this.post.id;
+      this.voteService.vote(this.votePayload).subscribe(() => {
+        this.updateVoteDetails();
+      }, error => {
+        this.toastr.error(error.error.message);
+        throwError(error);
+      });
+    } else {
+      console.log('does not have any post');
+    }
   }
 
   private updateVoteDetails() {
-    this.postService.getPosts(this.post.id).subscribe(post => {
-      this.post = post;
-    });
+    if(this.post) {
+      this.postService.getPosts(this.post.id).subscribe(post => {
+        this.post = post;
+      });
+    } else {
+      console.log('does not have any post');
+    }
+    
   }
 
 }

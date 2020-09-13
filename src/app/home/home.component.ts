@@ -14,6 +14,8 @@ export class HomeComponent implements OnInit {
   constructor(private postService: PostService) {
     this.postService.getAllPosts().subscribe(post => {
       this.posts = post;
+    }, error => {
+      console.log('There is something wrong while getting posts, Please contact admin');
     });
    }
 

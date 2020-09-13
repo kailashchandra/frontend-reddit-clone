@@ -40,6 +40,7 @@ export class CreatePostComponent implements OnInit {
     this.subredditService.getAllSubreddits().subscribe(data => {
       this.subreddits = data;
     }, error => {
+      console.log('Error while getting Subreddits!!');
       throwError(error);
     });
   }

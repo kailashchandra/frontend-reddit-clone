@@ -20,4 +20,8 @@ export class SubredditService {
   createSubreddit(subredditModel: SubredditModel): Observable<SubredditModel> {
     return this.http.post<SubredditModel>(this.URL+'/subreddit', subredditModel);
   }
+
+  getAllSubreddit(subredditId : number) : Observable<SubredditModel> {
+    return this.http.get<SubredditModel>(this.URL+'/subreddit/'+subredditId);
+  }
 }

@@ -6,27 +6,34 @@ import { LoginRequestPayload } from '../login/login-request.payload';
 import { map, tap } from 'rxjs/operators';
 import { LocalStorageService } from 'ngx-webstorage';
 import { LoginResponse } from '../login/login-response.payload';
-
-
-
+import { Store, select } from '@ngrx/store';
+import { UserState } from '../store/user.state';
+import { login, logout } from './../../auth/store/actions/auth.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  @Output() loggedIn: EventEmitter<boolean> = new EventEmitter();
-  @Output() username: EventEmitter<string> = new EventEmitter();
+  //@Output() loggedIn: EventEmitter<boolean> = new EventEmitter();
+  //@Output() username: EventEmitter<string> = new EventEmitter();
 
   //URL:string = 'http://localhost:8080/api/auth';
   URL:string = 'https://kdcoder-reddit-clone.herokuapp.com/api/auth';
+  username:string;
 
-  refreshTokenPayload = {
+  /*refreshTokenPayload = {
     refreshToken: this.getRefreshToken(),
-    username: this.getUserName()
-  }
+    username: this.username
+  };*/
 
   constructor(private httpClient: HttpClient,
-    private localStorage: LocalStorageService) { }
+    private localStorage: LocalStorageService,
+    private store: Store<{stateObj:UserState }>) {
+      this.store.pipe(select('stateObj')).subscribe(data=>{
+        //this.isLoggedIn = data.isLoggedIn;
+        this.username = data.username;
+      });
+     }
 
   signup(signupRequestPayload: SignupRequestPayload): Observable<any> {
     return this.httpClient.post(this.URL+'/signup', signupRequestPayload, { responseType: 'text' });
@@ -40,8 +47,9 @@ export class AuthService {
           this.localStorage.store('refreshToken', data.refreshToken);
           this.localStorage.store('expiresAt', data.expiresAt);
           
-          this.loggedIn.emit(true);
-          this.username.emit(data.username);
+          //this.loggedIn.emit(true);
+          //this.username.emit(data.username);
+          this.store.dispatch(login({ loggedInStatus: true, nameOfUser: loginRequestPayload.username }));
           return true;
         }));
   }
@@ -52,7 +60,7 @@ export class AuthService {
 
   refreshToken() {
     return this.httpClient.post<LoginResponse>(this.URL+'/refresh/token',
-      this.refreshTokenPayload)
+    this.getRefreshTokenPayload())//this.refreshTokenPayload)
       .pipe(tap(response => {
         this.localStorage.clear('authenticationToken');
         this.localStorage.clear('expiresAt');
@@ -63,7 +71,7 @@ export class AuthService {
   }
 
   logout() {
-    this.httpClient.post(this.URL+'/logout', this.refreshTokenPayload,
+    this.httpClient.post(this.URL+'/logout', this.getRefreshTokenPayload(),//this.refreshTokenPayload,
     { responseType: 'text' })
     .subscribe(data => {
       console.log(data);
@@ -74,23 +82,32 @@ export class AuthService {
   this.localStorage.clear('username');
   this.localStorage.clear('refreshToken');
   this.localStorage.clear('expiresAt');
+  this.store.dispatch(logout());
   }
 
   getRefreshToken() {
     return this.localStorage.retrieve('refreshToken');
   }
 
-  getUserName() {
-    return this.localStorage.retrieve('username');
-  }
+  /*getUserName() {
+    
+    //return this.localStorage.retrieve('username');
+  }*/
 
   getExpirationTime() {
     return this.localStorage.retrieve('expiresAt');
   }
 
-  isLoggedIn(): boolean {
-    return this.getJwtToken() != null;
+  /*isLoggedIn(): Observable<UserState> {
+    //var loginStatus: UserState;
+    //return this.store.pipe(select('userStateObj'));
+    //return loginStatus;
+  }*/
+  getRefreshTokenPayload() {
+    return {
+      refreshToken: this.getRefreshToken(),
+      username: this.username
+    }
   }
-
   
 }

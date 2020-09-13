@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SubredditService } from 'src/app/subreddit/subreddit.service';
 import { SubredditModel } from 'src/app/subreddit/subreddit-response';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-subreddit-side-bar',
@@ -19,6 +20,9 @@ export class SubredditSideBarComponent implements OnInit {
       } else {
         this.subreddits = data;
       }
+    }, error => {
+      console.log('Error while getting Subreddit !!');
+      throwError(error);
     })
    }
 
